@@ -21,23 +21,23 @@
     </mat-form-field>
   </div>
   <div class="chat-container">
-    <div *ngIf="showHideName">
+    <div class="name" *ngIf="showHideName">
       <mat-form-field appearance="outline" class="custom-height">
         <input matInput formControlName="name" placeholder="Enter Your name" />
-         <mat-hint
-        *ngIf="
-          form.get('name')?.hasError('required') && form.get('name')?.touched
-        "
-      >
-        Please select a conversation type
-      </mat-hint>
+        <mat-hint
+          *ngIf="
+            form.get('name')?.hasError('required') && form.get('name')?.touched
+          "
+        >
+          Please select a conversation type
+        </mat-hint>
       </mat-form-field>
       <button
-      mat-stroked-button 
+      class="mt-3"
+        mat-flat-button
         [disabled]="
           form.get('name')?.value?.length < 2 || form.get('mode')?.value == null
         "
-        class="ms-3"
         (click)="showChatWindow()"
       >
         Start
