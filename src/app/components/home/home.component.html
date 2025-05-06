@@ -1,0 +1,77 @@
+<form [formGroup]="form">
+  <div class="settings p-4">
+    <h3 class="mb-3">Conversation Type ⚙️</h3>
+    <mat-form-field appearance="outline" class="custom-height">
+      <mat-select
+        formControlName="mode"
+        placeholder="Select conversation type"
+        (selectionChange)="onChange($event.value)"
+      >
+        @for(option of modes; track option){
+        <mat-option pa [value]="option.value">{{ option.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-hint
+        *ngIf="
+          form.get('mode')?.hasError('required') && form.get('mode')?.touched
+        "
+      >
+        Please select a conversation type
+      </mat-hint>
+    </mat-form-field>
+  </div>
+  <div class="chat-container">
+    <div *ngIf="showHideName">
+      <mat-form-field appearance="outline" class="custom-height">
+        <input matInput formControlName="name" placeholder="Enter Your name" />
+         <mat-hint
+        *ngIf="
+          form.get('name')?.hasError('required') && form.get('name')?.touched
+        "
+      >
+        Please select a conversation type
+      </mat-hint>
+      </mat-form-field>
+      <button
+      mat-stroked-button 
+        [disabled]="
+          form.get('name')?.value?.length < 2 || form.get('mode')?.value == null
+        "
+        class="ms-3"
+        (click)="showChatWindow()"
+      >
+        Start
+      </button>
+    </div>
+
+    <div class="chat-history" #scrollContainer>
+      <div
+        *ngFor="let msg of messages"
+        [ngClass]="{ me: msg.sender === 'me', ai: msg.sender === 'ai' }"
+        class="chat-bubble"
+      >
+        <div class="message">
+          {{ msg.message }} <span (click)="copyText(msg.message)"> </span>
+        </div>
+        <div class="timestamp">
+          {{ msg.timestamp | date : "shortTime" }}
+        </div>
+      </div>
+    </div>
+    <div *ngIf="loading" class="typing-indicator text-start">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="chat-input" *ngIf="!showHideName">
+      <textarea
+        type="text"
+        formControlName="prompt"
+        placeholder="Type your message..."
+        (keydown.enter)="sendMessage()"
+      ></textarea>
+      <button mat-stroked-button (click)="sendMessage()">Send</button>
+    </div>
+  </div>
+</form>
